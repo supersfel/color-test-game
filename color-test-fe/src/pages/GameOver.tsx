@@ -29,7 +29,7 @@ const GameOver = ({ level, gameStart }: Props) => {
 
   const [mentIdx, setMentIdx] = useState(-1);
   useEffect(() => {
-    const nxIdx = level > 19 ? 0 : level > 15 ? 1 : level > 9 ? 2 : 3;
+    const nxIdx = level > 19 ? 0 : level > 14 ? 1 : level > 8 ? 2 : 3;
     setMentIdx(nxIdx);
   }, [level]);
 
