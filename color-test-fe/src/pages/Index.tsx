@@ -32,7 +32,9 @@ const Index = () => {
       {gameState === "progress" ? (
         <Progress gameEnd={gameEnd} level={level} levelUp={levelUp} />
       ) : null}
-      {gameState === "end" ? <GameOver level={level} /> : null}
+      {gameState === "end" ? (
+        <GameOver level={level} gameStart={gameStart} />
+      ) : null}
     </Wrapper>
   );
 };

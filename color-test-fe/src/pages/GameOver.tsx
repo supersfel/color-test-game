@@ -7,9 +7,10 @@ import { uiColor } from "styles/color";
 
 interface Props {
   level: number;
+  gameStart: () => void;
 }
 
-const GameOver = ({ level }: Props) => {
+const GameOver = ({ level, gameStart }: Props) => {
   const mentAry = [
     "화가이신가요?! 말도 안되게 잘하시네요!",
     "수준급 시각적 차별력을 지니셨네요!!",
@@ -46,6 +47,10 @@ const GameOver = ({ level }: Props) => {
       <BrushArea>
         <Brush color={medalColor[mentIdx]} size="200px"></Brush>
       </BrushArea>
+      <ButtonArea>
+        <PlayAgainBtn onClick={gameStart}>다시하기</PlayAgainBtn>
+        <ShareBtn>공유하기</ShareBtn>
+      </ButtonArea>
     </Wrapper>
   );
 };
@@ -83,6 +88,22 @@ const BrushArea = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const ButtonArea = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+`;
+
+const PlayAgainBtn = styled(BlackBox)`
+  font-size: 1.8rem;
+  cursor: pointer;
+`;
+
+const ShareBtn = styled(BlackBox)`
+  font-size: 1.8rem;
+  cursor: pointer;
 `;
 
 export default GameOver;
