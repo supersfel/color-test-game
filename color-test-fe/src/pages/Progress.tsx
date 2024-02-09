@@ -4,24 +4,27 @@ import Brush from "components/Brush";
 import Xylophone from "components/Xylophone";
 import React, { useEffect, useState } from "react";
 import { BlackBox } from "styles/box";
+import { makeRandomColors } from "utils/game";
 
-const Progress = () => {
+interface Props {
+  gameEnd: () => void;
+}
+
+const Progress = ({ gameEnd }: Props) => {
   const isMobile = /Mobi/i.test(window.navigator.userAgent);
   const [level, setLevel] = useState(1);
-  const testAry = [
-    "#800080",
-    "#4b0082",
-    "#0000ff",
-    "#464BD8",
-    "#104331",
-    "#008000",
-    "#ffff00",
-    "#ff8c00",
-    "#f135bc",
-    "#ff0000",
-  ];
+  const [colors, setColors] = useState<string[]>([]);
 
   const [doCheckAnswer, setDoCheckAnswer] = useState(false);
+  const [answer, setAnswer] = useState<string>("");
+
+  //레벨에 맞는 색상 선택
+  useEffect(() => {
+    const curColors = makeRandomColors(level);
+    const answerIdx = Math.floor(Math.random() * 10);
+    setColors(curColors);
+    setAnswer(curColors[answerIdx]);
+  }, [level]);
 
   useEffect(() => {
     setDoCheckAnswer(false);
@@ -31,17 +34,25 @@ const Progress = () => {
     setDoCheckAnswer(true);
   };
 
+  const goNextLevel = () => {
+    setLevel(level + 1);
+    console.log(level);
+  };
+
   return (
     <Wrapper isMobile={isMobile}>
+      <Level>Lv{level}</Level>
       <BrushArea>
-        <Brush color={"#333333"} size="200px"></Brush>
+        <Brush color={answer} size="200px"></Brush>
       </BrushArea>
       <XylophoneWrapper>
         <Xylophone
-          colorAry={testAry}
+          colorAry={colors}
           doChekcAnswer={doCheckAnswer}
-          answer="#464BD8"
-          level={1}
+          answer={answer}
+          level={level}
+          goNextLevel={goNextLevel}
+          gameEnd={gameEnd}
         />
       </XylophoneWrapper>
       <CheckBtn onClick={hadleCheckBtn}>선택하기</CheckBtn>
@@ -58,6 +69,12 @@ const Wrapper = styled.p<{ isMobile: boolean }>`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+`;
+
+const Level = styled.p`
+  font-size: 4rem;
+  margin-top: 1rem;
+  magrin-bottom: -1rem;
 `;
 
 const BrushArea = styled.div`

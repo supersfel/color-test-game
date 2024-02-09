@@ -5,6 +5,7 @@ import Xylophone from "components/Xylophone";
 import { useEffect, useState } from "react";
 import { BlackBox } from "styles/box";
 import { uiColor } from "styles/color";
+import { makeRandomColors } from "utils/game";
 
 interface Props {
   gameStart: () => void;
