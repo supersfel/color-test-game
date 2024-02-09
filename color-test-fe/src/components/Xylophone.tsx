@@ -1,17 +1,26 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import { colorStickType } from "types/game";
 
 const Xylophone = ({ colorAry }: { colorAry: string[] }) => {
   const isMobile = /Mobi/i.test(window.navigator.userAgent); // "Mobi" 가 User agent에 포함되어 있으면 모바일
-
+  //간격 설정 (10개 기준)으로만 현재 개발
   const INTERVAL_BETWEEN = isMobile ? 70 : 120;
   const START_ROTATIONY = isMobile ? 120 : 77;
   const MOVE_ROTATIONY = isMobile ? 100 : 70;
 
   const containerRef = useRef(null);
   const boxRef = useRef<HTMLElement[] | null[]>([]);
+
+  const [selected, setSelected] = useState<colorStickType | null>(null);
+
+  useEffect(() => {
+    if (colorAry.length !== 10) {
+      alert("현재  조작이 이상할 수 있습니다. F5키를 눌러주세요");
+    }
+  }, [colorAry.length]);
 
   //초기 container perspective 설정
   useLayoutEffect(() => {
@@ -56,6 +65,7 @@ const Xylophone = ({ colorAry }: { colorAry: string[] }) => {
     return () => ctx.revert();
   }, [colorAry]);
 
+  //컴퓨터 화면에서 마우스 이동으로 막대 를 볼 수 있음
   const handleMouseMoveWrapper = (e: React.MouseEvent) => {
     let ctx = gsap.context(() => {
       boxRef.current.forEach((b, i) => {
@@ -72,6 +82,7 @@ const Xylophone = ({ colorAry }: { colorAry: string[] }) => {
     return () => ctx.revert();
   };
 
+  //박스에 마우스를 가져다 대면 커짐
   const handleMouseEnterBox = (idx: number) => {
     gsap.to(boxRef.current[idx], {
       duration: 0.3,
@@ -80,11 +91,15 @@ const Xylophone = ({ colorAry }: { colorAry: string[] }) => {
     });
   };
 
+  //마우스를 빼면 작아짐
   const handleMouseLeaveBox = (idx: number) => {
+    if (idx === selected?.idx) return;
     gsap.to(boxRef.current[idx], { duration: 0.4, scaleY: 1 });
   };
 
-  const moveBoxCenter = (selectIdx: number) => {
+  //박스 클릭
+  const clickBox = (selectIdx: number) => {
+    //클릭된 박스가 중앙에 올 수 있도록
     let ctx = gsap.context(() => {
       boxRef.current.forEach((b, i) => {
         gsap.to(b, {
@@ -94,8 +109,18 @@ const Xylophone = ({ colorAry }: { colorAry: string[] }) => {
             (i / colorAry.length) * INTERVAL_BETWEEN +
             (colorAry.length - selectIdx) * 8,
         });
+
+        //선택되어있던 박스 집어넣기
+        if (selected)
+          gsap.to(boxRef.current[selected.idx], { duration: 0.4, scaleY: 1 });
       });
     }, containerRef);
+
+    //선택 박스 저장
+    setSelected({
+      idx: selectIdx,
+      color: boxRef.current[selectIdx]?.style.background,
+    });
 
     return () => ctx.revert();
   };
@@ -111,7 +136,7 @@ const Xylophone = ({ colorAry }: { colorAry: string[] }) => {
               color={color}
               onMouseEnter={() => handleMouseEnterBox(i)}
               onMouseLeave={() => handleMouseLeaveBox(i)}
-              onClick={() => moveBoxCenter(i)}
+              onClick={() => clickBox(i)}
             ></Box>
           );
         })}

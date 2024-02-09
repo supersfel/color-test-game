@@ -4,20 +4,25 @@ import Brush from "components/Brush";
 import Xylophone from "components/Xylophone";
 import React from "react";
 import { BlackBox } from "styles/box";
+import { uiColor } from "styles/color";
 
-const Start = () => {
+interface Props {
+  gameStart: () => void;
+}
+
+const Start = ({ gameStart }: Props) => {
   const isMobile = /Mobi/i.test(window.navigator.userAgent); // "Mobi" 가 User agent에 포함되어 있으면 모바일
-  const testAry = [
-    "#ff0000",
-    "#ff8c00",
-    "#ffff00",
-    "#008000",
-    "#0000ff",
+  const startAry = [
+    "#800080",
     "#4b0082",
-    "#800080",
-    "#800080",
-    "#800080",
-    "#800080",
+    "#0000ff",
+    "#464BD8",
+    "#104331",
+    "#008000",
+    "#ffff00",
+    "#ff8c00",
+    "#f135bc",
+    "#ff0000",
   ];
 
   return (
@@ -28,11 +33,18 @@ const Start = () => {
       </Description>
 
       <BrushArea>
-        <Brush color="#464BD8" size="200px"></Brush>
+        <Brush color={uiColor.startBrush} size="200px"></Brush>
       </BrushArea>
+
+      <Tutorial>
+        <p>아래 10개의 색 중에서 물감과</p>
+        <p>똑같은 색을 클릭해 주세요!</p>
+      </Tutorial>
       <XylophoneWrapper>
-        <Xylophone colorAry={testAry} />
+        <Xylophone colorAry={startAry} />
       </XylophoneWrapper>
+
+      <StartBtn onClick={gameStart}>시작하기</StartBtn>
     </Wrapper>
   );
 };
@@ -50,16 +62,22 @@ const Wrapper = styled.p<{ isMobile: boolean }>`
 const Description = styled(BlackBox)`
   margin-top: 2rem;
   width: 100%;
-  min-width: 350px;
   p {
     text-align: center;
   }
 `;
 
 const BrushArea = styled.div`
+  margin: 2rem 0;
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const Tutorial = styled.div`
+  p {
+    text-align: center;
+  }
 `;
 
 const XylophoneWrapper = styled.div`
@@ -69,5 +87,11 @@ const XylophoneWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const StartBtn = styled(BlackBox)`
+  margin: 3rem 0;
+  font-size: 2rem;
+  cursor: pointer;
 `;
 export default Start;
