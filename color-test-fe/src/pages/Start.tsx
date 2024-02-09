@@ -1,10 +1,24 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 import Brush from "components/Brush";
+import Xylophone from "components/Xylophone";
 import React from "react";
 import { BlackBox } from "styles/box";
 
 const Start = () => {
+  const testAry = [
+    "#ff0000",
+    "#ff8c00",
+    "#ffff00",
+    "#008000",
+    "#0000ff",
+    "#4b0082",
+    "#800080",
+    "#800080",
+    "#800080",
+    "#800080",
+  ];
+
   return (
     <Wrapper>
       <Description>
@@ -15,6 +29,9 @@ const Start = () => {
       <BrushArea>
         <Brush color="#464BD8" size="200px"></Brush>
       </BrushArea>
+      <XylophoneWrapper>
+        <Xylophone colorAry={testAry} />
+      </XylophoneWrapper>
     </Wrapper>
   );
 };
@@ -42,5 +59,14 @@ const BrushArea = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const XylophoneWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 export default Start;
