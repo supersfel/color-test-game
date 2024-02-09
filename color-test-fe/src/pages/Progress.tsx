@@ -8,11 +8,12 @@ import { makeRandomColors } from "utils/game";
 
 interface Props {
   gameEnd: () => void;
+  level: number;
+  levelUp: () => void;
 }
 
-const Progress = ({ gameEnd }: Props) => {
+const Progress = ({ gameEnd, level, levelUp }: Props) => {
   const isMobile = /Mobi/i.test(window.navigator.userAgent);
-  const [level, setLevel] = useState(1);
   const [colors, setColors] = useState<string[]>([]);
 
   const [doCheckAnswer, setDoCheckAnswer] = useState(false);
@@ -35,8 +36,7 @@ const Progress = ({ gameEnd }: Props) => {
   };
 
   const goNextLevel = () => {
-    setLevel(level + 1);
-    console.log(level);
+    levelUp();
   };
 
   return (

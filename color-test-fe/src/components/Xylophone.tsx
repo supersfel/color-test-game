@@ -17,7 +17,7 @@ interface Props {
   doChekcAnswer: boolean;
   answer: string;
   level: number;
-  goNextLevel?: () => void;
+  goNextLevel: () => void;
   gameEnd?: () => void;
 }
 
@@ -37,26 +37,38 @@ const Xylophone = memo(
     //정답체크 후 애니메이션 발생 시작일땐 level이 0
     const checkAnswer = (color: string | undefined, answer: string) => {
       if (!color) return;
+
       color = changeRGBToHex(color);
-      console.log(color, answer);
+
+      //맞춘경우
       if (color === answer) {
         makeCorrectBoom();
-        if (level) {
-          toast.success(`잘하셨어요! ${level} 클리어!!`);
-          if (goNextLevel) goNextLevel();
-        } else toast.success(`잘하셨어요! 시작해 볼까요?`);
+        goNextLevel();
+        if (level) toast.success(`잘하셨어요! ${level} 클리어!!`);
+        else toast.success(`잘하셨어요! 시작해 볼까요?`);
         return;
       }
+
+      //틀린경우
       makeWrongBoom();
       if (level) {
         toast.warning(`틀렸어요 ㅠㅠ`);
         if (gameEnd) gameEnd();
-      } else toast.success(`틀리긴 했지만 시작해 볼까요?`);
+      } else {
+        toast.success(`틀리긴 했지만 시작해 볼까요?`);
+      }
       setSelected(null);
     };
 
     useEffect(() => {
-      if (doChekcAnswer) checkAnswer(selected?.color, answer);
+      if (doChekcAnswer) {
+        if (!selected && level) {
+          toast.warning("색을 선택해주세요!");
+          return;
+        }
+        checkAnswer(selected?.color, answer);
+      }
+
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [doChekcAnswer, answer, selected?.color]);
 

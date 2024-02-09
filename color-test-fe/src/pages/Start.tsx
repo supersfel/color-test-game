@@ -5,13 +5,13 @@ import Xylophone from "components/Xylophone";
 import { useEffect, useState } from "react";
 import { BlackBox } from "styles/box";
 import { uiColor } from "styles/color";
-import { makeRandomColors } from "utils/game";
 
 interface Props {
   gameStart: () => void;
+  levelUp: () => void;
 }
 
-const Start = ({ gameStart }: Props) => {
+const Start = ({ gameStart, levelUp }: Props) => {
   const isMobile = /Mobi/i.test(window.navigator.userAgent); // "Mobi" 가 User agent에 포함되어 있으면 모바일
   const startAry = [
     "#800080",
@@ -58,6 +58,7 @@ const Start = ({ gameStart }: Props) => {
           doChekcAnswer={doCheckAnswer}
           answer="#464BD8"
           level={0}
+          goNextLevel={levelUp}
         />
       </XylophoneWrapper>
 
