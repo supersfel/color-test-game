@@ -29,6 +29,7 @@ const Start = ({ gameStart }: Props) => {
 
   useEffect(() => {
     if (doCheckAnswer) gameStart();
+    setDoCheckAnswer(false);
   }, [doCheckAnswer, gameStart]);
 
   const handleStartBtn = () => {

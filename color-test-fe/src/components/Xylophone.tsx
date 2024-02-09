@@ -31,13 +31,11 @@ const Xylophone = memo(({ colorAry, doChekcAnswer, answer, level }: Props) => {
 
   const [selected, setSelected] = useState<colorStickType | null>(null);
 
-  //색종이 커스터마이징
-
+  //정답체크 후 애니메이션 발생 시작일땐 level이 0
   const checkAnswer = (color: string | undefined, answer: string) => {
     if (!color) return;
     color = changeRGBToHex(color);
 
-    console.log(color, answer);
     if (color === answer) {
       makeCorrectBoom();
       if (level) toast.success(`잘하셨어요! ${level + 1} 클리어!!`);
