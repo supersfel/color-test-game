@@ -6,6 +6,7 @@ import React from "react";
 import { BlackBox } from "styles/box";
 
 const Start = () => {
+  const isMobile = /Mobi/i.test(window.navigator.userAgent); // "Mobi" 가 User agent에 포함되어 있으면 모바일
   const testAry = [
     "#ff0000",
     "#ff8c00",
@@ -20,7 +21,7 @@ const Start = () => {
   ];
 
   return (
-    <Wrapper>
+    <Wrapper isMobile={isMobile}>
       <Description>
         <p>당신의 시각적 차별력은 얼마나 뛰어나신가요?</p>
         <p>레벨을 측정하고 공유해 보세요!</p>
@@ -37,8 +38,8 @@ const Start = () => {
 };
 
 /* STYLE */
-const Wrapper = styled.p`
-  width: 60%;
+const Wrapper = styled.p<{ isMobile: boolean }>`
+  width: ${({ isMobile }) => (isMobile ? "90%" : "60%")};
   margin: 0 auto;
   display: flex;
   flex-direction: column;

@@ -1,11 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import React, { useEffect, useLayoutEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 
-const INTERVAL_BETWEEN = 120;
-
 const Xylophone = ({ colorAry }: { colorAry: string[] }) => {
+  const isMobile = /Mobi/i.test(window.navigator.userAgent); // "Mobi" 가 User agent에 포함되어 있으면 모바일
+
+  const INTERVAL_BETWEEN = isMobile ? 70 : 120;
+  const START_ROTATIONY = isMobile ? 120 : 77;
+  const MOVE_ROTATIONY = isMobile ? 100 : 70;
+
   const containerRef = useRef(null);
   const boxRef = useRef<HTMLElement[] | null[]>([]);
 
@@ -35,7 +39,8 @@ const Xylophone = ({ colorAry }: { colorAry: string[] }) => {
           {
             scaleY: 0,
             zIndex: -i,
-            rotationY: 90 + (i / colorAry.length) * INTERVAL_BETWEEN,
+            rotationY:
+              START_ROTATIONY + (i / colorAry.length) * INTERVAL_BETWEEN,
             transformOrigin: String("50% 50% -900%"),
           },
           {
@@ -57,7 +62,7 @@ const Xylophone = ({ colorAry }: { colorAry: string[] }) => {
         gsap.to(b, {
           duration: 0.6,
           rotationY:
-            80 +
+            START_ROTATIONY +
             (i / colorAry.length) * INTERVAL_BETWEEN +
             90 * (e.clientX / window.innerWidth),
         });
@@ -79,12 +84,15 @@ const Xylophone = ({ colorAry }: { colorAry: string[] }) => {
     gsap.to(boxRef.current[idx], { duration: 0.4, scaleY: 1 });
   };
 
-  const moveBoxCenter = () => {
+  const moveBoxCenter = (selectIdx: number) => {
     let ctx = gsap.context(() => {
       boxRef.current.forEach((b, i) => {
         gsap.to(b, {
           duration: 0.6,
-          rotationY: 90 + (i / colorAry.length) * INTERVAL_BETWEEN,
+          rotationY:
+            MOVE_ROTATIONY +
+            (i / colorAry.length) * INTERVAL_BETWEEN +
+            (colorAry.length - selectIdx) * 8,
         });
       });
     }, containerRef);
@@ -103,6 +111,7 @@ const Xylophone = ({ colorAry }: { colorAry: string[] }) => {
               color={color}
               onMouseEnter={() => handleMouseEnterBox(i)}
               onMouseLeave={() => handleMouseLeaveBox(i)}
+              onClick={() => moveBoxCenter(i)}
             ></Box>
           );
         })}
