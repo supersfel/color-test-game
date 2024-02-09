@@ -1,10 +1,25 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, {
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { gsap } from "gsap";
 import { colorStickType } from "types/game";
+import { toast } from "react-toastify";
+import { changeRGBToHex, makeCorrectBoom, makeWrongBoom } from "utils/game";
 
-const Xylophone = ({ colorAry }: { colorAry: string[] }) => {
+interface Props {
+  colorAry: string[];
+  doChekcAnswer: boolean;
+  answer: string;
+  level: number;
+}
+
+const Xylophone = memo(({ colorAry, doChekcAnswer, answer, level }: Props) => {
   const isMobile = /Mobi/i.test(window.navigator.userAgent); // "Mobi" 가 User agent에 포함되어 있으면 모바일
   //간격 설정 (10개 기준)으로만 현재 개발
   const INTERVAL_BETWEEN = isMobile ? 70 : 120;
@@ -15,6 +30,29 @@ const Xylophone = ({ colorAry }: { colorAry: string[] }) => {
   const boxRef = useRef<HTMLElement[] | null[]>([]);
 
   const [selected, setSelected] = useState<colorStickType | null>(null);
+
+  //색종이 커스터마이징
+
+  const checkAnswer = (color: string | undefined, answer: string) => {
+    if (!color) return;
+    color = changeRGBToHex(color);
+
+    console.log(color, answer);
+    if (color === answer) {
+      makeCorrectBoom();
+      if (level) toast.success(`잘하셨어요! ${level + 1} 클리어!!`);
+      else toast.success(`잘하셨어요! 시작해 볼까요?`);
+      return;
+    }
+    makeWrongBoom();
+    if (level) toast.warning(`틀렸어요 ㅠㅠ`);
+    else toast.success(`틀리긴 했지만 시작해 볼까요?`);
+  };
+
+  useEffect(() => {
+    if (doChekcAnswer) checkAnswer(selected?.color, answer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doChekcAnswer, answer, selected?.color]);
 
   useEffect(() => {
     if (colorAry.length !== 10) {
@@ -63,7 +101,7 @@ const Xylophone = ({ colorAry }: { colorAry: string[] }) => {
     }, containerRef);
 
     return () => ctx.revert();
-  }, [colorAry]);
+  }, [INTERVAL_BETWEEN, START_ROTATIONY, colorAry]);
 
   //컴퓨터 화면에서 마우스 이동으로 막대 를 볼 수 있음
   const handleMouseMoveWrapper = (e: React.MouseEvent) => {
@@ -143,7 +181,7 @@ const Xylophone = ({ colorAry }: { colorAry: string[] }) => {
       </Animations>
     </Wrapper>
   );
-};
+});
 
 /* STYLE */
 const Wrapper = styled.div`

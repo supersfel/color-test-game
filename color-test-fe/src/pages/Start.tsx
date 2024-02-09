@@ -2,7 +2,7 @@
 import styled from "@emotion/styled";
 import Brush from "components/Brush";
 import Xylophone from "components/Xylophone";
-import React from "react";
+import { useEffect, useState } from "react";
 import { BlackBox } from "styles/box";
 import { uiColor } from "styles/color";
 
@@ -25,6 +25,16 @@ const Start = ({ gameStart }: Props) => {
     "#ff0000",
   ];
 
+  const [doCheckAnswer, setDoCheckAnswer] = useState(false);
+
+  useEffect(() => {
+    if (doCheckAnswer) gameStart();
+  }, [doCheckAnswer, gameStart]);
+
+  const handleStartBtn = () => {
+    setDoCheckAnswer(true);
+  };
+
   return (
     <Wrapper isMobile={isMobile}>
       <Description>
@@ -41,10 +51,15 @@ const Start = ({ gameStart }: Props) => {
         <p>똑같은 색을 클릭해 주세요!</p>
       </Tutorial>
       <XylophoneWrapper>
-        <Xylophone colorAry={startAry} />
+        <Xylophone
+          colorAry={startAry}
+          doChekcAnswer={doCheckAnswer}
+          answer="#464BD8"
+          level={0}
+        />
       </XylophoneWrapper>
 
-      <StartBtn onClick={gameStart}>시작하기</StartBtn>
+      <StartBtn onClick={handleStartBtn}>시작하기</StartBtn>
     </Wrapper>
   );
 };
