@@ -1,0 +1,14 @@
+@import "styles/reset.css";
+@import "styles/font.css";
+
+body {
+  margin: 0;
+  font-family: "Jua", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
