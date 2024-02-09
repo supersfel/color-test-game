@@ -2,6 +2,7 @@
 import styled from "@emotion/styled";
 import Brush from "components/Brush";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { BlackBox } from "styles/box";
 import { uiColor } from "styles/color";
 
@@ -34,6 +35,11 @@ const GameOver = ({ level, gameStart }: Props) => {
   }, [level]);
 
   const isMobile = /Mobi/i.test(window.navigator.userAgent);
+
+  const handleShareBtn = () => {
+    toast.warning("아직 공유중은 개발중이에요 ㅠ");
+  };
+
   return (
     <Wrapper isMobile={isMobile}>
       <Result>
@@ -49,7 +55,7 @@ const GameOver = ({ level, gameStart }: Props) => {
       </BrushArea>
       <ButtonArea>
         <PlayAgainBtn onClick={gameStart}>다시하기</PlayAgainBtn>
-        <ShareBtn>공유하기</ShareBtn>
+        <ShareBtn onClick={handleShareBtn}>공유하기</ShareBtn>
       </ButtonArea>
     </Wrapper>
   );
