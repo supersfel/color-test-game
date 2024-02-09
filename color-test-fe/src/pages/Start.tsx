@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
+import Brush from "components/Brush";
 import React from "react";
 import { BlackBox } from "styles/box";
 
@@ -10,6 +11,10 @@ const Start = () => {
         <p>당신의 시각적 차별력은 얼마나 뛰어나신가요?</p>
         <p>레벨을 측정하고 공유해 보세요!</p>
       </Description>
+
+      <BrushArea>
+        <Brush color="#464BD8" size="200px"></Brush>
+      </BrushArea>
     </Wrapper>
   );
 };
@@ -21,6 +26,7 @@ const Wrapper = styled.p`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 `;
 
 const Description = styled(BlackBox)`
@@ -32,4 +38,9 @@ const Description = styled(BlackBox)`
   }
 `;
 
+const BrushArea = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 export default Start;
