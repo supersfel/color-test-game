@@ -1,12 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import React, {
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { colorStickType } from "types/game";
 import { toast } from "react-toastify";
@@ -24,6 +18,7 @@ interface Props {
 const Xylophone = memo(
   ({ colorAry, doChekcAnswer, answer, level, goNextLevel, gameEnd }: Props) => {
     const isMobile = /Mobi/i.test(window.navigator.userAgent); // "Mobi" 가 User agent에 포함되어 있으면 모바일
+
     //간격 설정 (10개 기준)으로만 현재 개발
     const INTERVAL_BETWEEN = isMobile ? 70 : 100;
     const START_ROTATIONY = isMobile ? 120 : 80;
@@ -81,12 +76,12 @@ const Xylophone = memo(
     }, [colorAry]);
 
     //초기 container perspective 설정
-    useLayoutEffect(() => {
+    useEffect(() => {
       gsap.timeline().set(containerRef.current, { perspective: 1000 });
     }, [colorAry]);
 
     // 각 Box에 애니메이션 설정
-    useLayoutEffect(() => {
+    useEffect(() => {
       let ctx = gsap.context(() => {
         boxRef.current.forEach((b, i) => {
           gsap.set(b, {
@@ -145,7 +140,7 @@ const Xylophone = memo(
       setTouchStartX(e.changedTouches[0].clientX);
     };
 
-    const hadleTouchMoveWrapper = (e: React.TouchEvent) => {
+    const handleTouchMoveWrapper = (e: React.TouchEvent) => {
       const target = e.changedTouches[0].target as HTMLDivElement;
       const touchedIdx = target.getAttribute("data-key");
       if (!touchedIdx) return;
@@ -226,7 +221,7 @@ const Xylophone = memo(
     return (
       <Wrapper
         onMouseMove={handleMouseMoveWrapper}
-        onTouchMove={hadleTouchMoveWrapper}
+        onTouchMove={handleTouchMoveWrapper}
         onTouchStart={handleTouchStartWrapper}
       >
         <Animations ref={containerRef}>
