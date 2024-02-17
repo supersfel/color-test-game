@@ -158,7 +158,7 @@ const Xylophone = memo(
               MOVE_ROTATIONY +
               (i / colorAry.length) * INTERVAL_BETWEEN +
               (colorAry.length - +touchedIdx) * 8 +
-              (moveDist + window.innerWidth / 2 - touchStartX) / 8,
+              (moveDist + window.innerWidth / 2 - touchStartX) / 6,
           });
           // 시작좌표 + 블럭별 간격두기 + 선택한 블럭을 중앙으로 + 상대변화값 + 첫 시작값 좌표계산
           // 8을 나눠주는 이유는 감도조절
