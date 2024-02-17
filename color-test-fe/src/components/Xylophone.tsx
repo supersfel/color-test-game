@@ -28,7 +28,7 @@ const Xylophone = memo(
     const INTERVAL_BETWEEN = isMobile ? 70 : 100;
     const START_ROTATIONY = isMobile ? 120 : 80;
     const MOVE_ROTATIONY = 100;
-    const TOUCH_SENS = 1.7; // 터치 감도
+    const TOUCH_SENS = 1.4; // 터치 감도
 
     const containerRef = useRef(null);
     const boxRef = useRef<HTMLElement[] | null[]>([]);
@@ -172,7 +172,6 @@ const Xylophone = memo(
 
     //박스에 마우스를 가져다 대면 커짐
     const handleMouseEnterBox = (idx: number) => {
-      if (isMobile) return;
       gsap.to(boxRef.current[idx], {
         duration: 0.3,
         scaleY: 1.2,
