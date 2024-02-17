@@ -124,6 +124,7 @@ const Xylophone = memo(
 
     //컴퓨터 화면에서 마우스 이동으로 막대 를 볼 수 있음
     const handleMouseMoveWrapper = (e: React.MouseEvent) => {
+      if (isMobile) return;
       let ctx = gsap.context(() => {
         boxRef.current.forEach((b, i) => {
           gsap.to(b, {
@@ -170,6 +171,7 @@ const Xylophone = memo(
 
     //박스에 마우스를 가져다 대면 커짐
     const handleMouseEnterBox = (idx: number) => {
+      if (isMobile) return;
       gsap.to(boxRef.current[idx], {
         duration: 0.3,
         scaleY: 1.2,
@@ -179,6 +181,7 @@ const Xylophone = memo(
 
     //마우스를 빼면 작아짐
     const handleMouseLeaveBox = (idx: number) => {
+      if (isMobile) return;
       if (idx === selected?.idx) return;
       gsap.to(boxRef.current[idx], {
         duration: 0.4,
