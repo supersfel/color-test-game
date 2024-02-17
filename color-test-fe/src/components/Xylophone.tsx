@@ -33,6 +33,7 @@ const Xylophone = memo(
     const boxRef = useRef<HTMLElement[] | null[]>([]);
 
     const [selected, setSelected] = useState<colorStickType | null>(null);
+    const [touchStartX, setTouchStartX] = useState<number>(0);
 
     //정답체크 후 애니메이션 발생 시작일땐 level이 0
     const checkAnswer = (color: string | undefined, answer: string) => {
@@ -138,21 +139,29 @@ const Xylophone = memo(
       return () => ctx.revert();
     };
 
+    const handleTouchStartWrapper = (e: React.TouchEvent) => {
+      setTouchStartX(e.changedTouches[0].clientX);
+    };
+
     const hadleTouchMoveWrapper = (e: React.TouchEvent) => {
       const target = e.changedTouches[0].target as HTMLDivElement;
-      console.log(target.getAttribute("data-key"));
+      const touchedIdx = target.getAttribute("data-key");
+      if (!touchedIdx) return;
+
+      let moveDist = touchStartX - e.changedTouches[0].clientX;
 
       let ctx = gsap.context(() => {
         boxRef.current.forEach((b, i) => {
           gsap.to(b, {
             duration: 0.6,
             rotationY:
-              START_ROTATIONY +
+              MOVE_ROTATIONY +
               (i / colorAry.length) * INTERVAL_BETWEEN +
-              90 *
-                ((window.innerWidth * 0.9 - e.changedTouches[0].clientX) /
-                  window.innerWidth),
+              (colorAry.length - +touchedIdx) * 8 +
+              (moveDist + window.innerWidth / 2 - touchStartX) / 8,
           });
+          // 시작좌표 + 블럭별 간격두기 + 선택한 블럭을 중앙으로 + 상대변화값 + 첫 시작값 좌표계산
+          // 8을 나눠주는 이유는 감도조절
         });
       }, containerRef);
 
@@ -215,6 +224,7 @@ const Xylophone = memo(
       <Wrapper
         onMouseMove={handleMouseMoveWrapper}
         onTouchMove={hadleTouchMoveWrapper}
+        onTouchStart={handleTouchStartWrapper}
       >
         <Animations ref={containerRef}>
           {colorAry.map((color, i) => {
