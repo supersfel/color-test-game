@@ -28,6 +28,7 @@ const Xylophone = memo(
     const INTERVAL_BETWEEN = isMobile ? 70 : 100;
     const START_ROTATIONY = isMobile ? 120 : 80;
     const MOVE_ROTATIONY = 100;
+    const TOUCH_SENS = 1.7; // 터치 감도
 
     const containerRef = useRef(null);
     const boxRef = useRef<HTMLElement[] | null[]>([]);
@@ -159,7 +160,7 @@ const Xylophone = memo(
               MOVE_ROTATIONY +
               (i / colorAry.length) * INTERVAL_BETWEEN +
               (colorAry.length - +touchedIdx) * 8 +
-              (moveDist + window.innerWidth / 2 - touchStartX) / 6,
+              (moveDist * TOUCH_SENS + window.innerWidth / 2 - touchStartX) / 8,
           });
           // 시작좌표 + 블럭별 간격두기 + 선택한 블럭을 중앙으로 + 상대변화값 + 첫 시작값 좌표계산
           // 8을 나눠주는 이유는 감도조절
