@@ -25,9 +25,9 @@ const Xylophone = memo(
   ({ colorAry, doChekcAnswer, answer, level, goNextLevel, gameEnd }: Props) => {
     const isMobile = /Mobi/i.test(window.navigator.userAgent); // "Mobi" 가 User agent에 포함되어 있으면 모바일
     //간격 설정 (10개 기준)으로만 현재 개발
-    const INTERVAL_BETWEEN = isMobile ? 70 : 120;
-    const START_ROTATIONY = isMobile ? 120 : 77;
-    const MOVE_ROTATIONY = isMobile ? 100 : 70;
+    const INTERVAL_BETWEEN = isMobile ? 70 : 100;
+    const START_ROTATIONY = isMobile ? 120 : 80;
+    const MOVE_ROTATIONY = 100;
 
     const containerRef = useRef(null);
     const boxRef = useRef<HTMLElement[] | null[]>([]);
@@ -138,6 +138,27 @@ const Xylophone = memo(
       return () => ctx.revert();
     };
 
+    const hadleTouchMoveWrapper = (e: React.TouchEvent) => {
+      const target = e.changedTouches[0].target as HTMLDivElement;
+      console.log(target.getAttribute("data-key"));
+
+      let ctx = gsap.context(() => {
+        boxRef.current.forEach((b, i) => {
+          gsap.to(b, {
+            duration: 0.6,
+            rotationY:
+              START_ROTATIONY +
+              (i / colorAry.length) * INTERVAL_BETWEEN +
+              90 *
+                ((window.innerWidth * 0.9 - e.changedTouches[0].clientX) /
+                  window.innerWidth),
+          });
+        });
+      }, containerRef);
+
+      return () => ctx.revert();
+    };
+
     //박스에 마우스를 가져다 대면 커짐
     const handleMouseEnterBox = (idx: number) => {
       gsap.to(boxRef.current[idx], {
@@ -150,7 +171,10 @@ const Xylophone = memo(
     //마우스를 빼면 작아짐
     const handleMouseLeaveBox = (idx: number) => {
       if (idx === selected?.idx) return;
-      gsap.to(boxRef.current[idx], { duration: 0.4, scaleY: 1 });
+      gsap.to(boxRef.current[idx], {
+        duration: 0.4,
+        scaleY: 1,
+      });
     };
 
     //박스 클릭
@@ -158,17 +182,23 @@ const Xylophone = memo(
       //클릭된 박스가 중앙에 올 수 있도록
       let ctx = gsap.context(() => {
         boxRef.current.forEach((b, i) => {
-          gsap.to(b, {
-            duration: 0.6,
-            rotationY:
-              MOVE_ROTATIONY +
-              (i / colorAry.length) * INTERVAL_BETWEEN +
-              (colorAry.length - selectIdx) * 8,
-          });
+          //모바일인 경우에만 이동
+          if (isMobile) {
+            gsap.to(b, {
+              duration: 0.6,
+              rotationY:
+                MOVE_ROTATIONY +
+                (i / colorAry.length) * INTERVAL_BETWEEN +
+                (colorAry.length - selectIdx) * 8,
+            });
+          }
 
           //선택되어있던 박스 집어넣기
-          if (selected)
-            gsap.to(boxRef.current[selected.idx], { duration: 0.4, scaleY: 1 });
+          if (selected && selected.idx !== selectIdx)
+            gsap.to(boxRef.current[selected.idx], {
+              duration: 0.4,
+              scaleY: 1,
+            });
         });
       }, containerRef);
 
@@ -182,17 +212,21 @@ const Xylophone = memo(
     };
 
     return (
-      <Wrapper onMouseMove={handleMouseMoveWrapper}>
+      <Wrapper
+        onMouseMove={handleMouseMoveWrapper}
+        onTouchMove={hadleTouchMoveWrapper}
+      >
         <Animations ref={containerRef}>
           {colorAry.map((color, i) => {
             return (
               <Box
                 key={i}
+                data-key={i}
                 ref={(el) => (boxRef.current[i] = el)}
                 color={color}
                 onMouseEnter={() => handleMouseEnterBox(i)}
                 onMouseLeave={() => handleMouseLeaveBox(i)}
-                onClick={() => clickBox(i)}
+                onMouseDown={() => clickBox(i)}
               ></Box>
             );
           })}
